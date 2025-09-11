@@ -1,23 +1,10 @@
-require('dotenv').config();  // para local, opcional en Render
-const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
-const app = express();
-
-// Middleware para body parsing
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());  // si también vas a usar JSON
-
-// Conexión a MongoDB Atlas usando la variable de entorno
+// Conexión a MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
-
-// Opcional: un log para confirmar conexión
-mongoose.connection.once('open', () => {
-  console.log('Conectado a MongoDB Atlas');
 });
 
 // ---- Definición esquema y modelo Person ----
@@ -29,12 +16,10 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema);
 
-// 👇 Aquí viene lo que freeCodeCamp espera:
+// Exporta el modelo para tests
 exports.PersonModel = Person;
 
-
-
-// (el resto de las funciones de CRUD las vas a completar en pasos posteriores)
+// --- CRUD Functions ---
 
 const createAndSavePerson = (done) => {
   const person = new Person({
@@ -48,6 +33,7 @@ const createAndSavePerson = (done) => {
     return done(null, data);
   });
 };
+
 const createManyPeople = (arrayOfPeople, done) => {
   done(null /*, data*/);
 };
