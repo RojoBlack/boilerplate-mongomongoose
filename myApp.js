@@ -1,21 +1,48 @@
-require('dotenv').config();
-const mongoose = require("mongoose");
-const Person = mongoose.model('Person', personSchema);
+require('dotenv').config();  // para local, opcional en Render
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
+const app = express();
+
+// Middleware para body parsing
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());  // si también vas a usar JSON
+
+// Conexión a MongoDB Atlas usando la variable de entorno
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-
-const personSchema = new mongoose.Schema({
-  name: { type: String, required: true },   
-  age: Number,                              
-  favoriteFoods: [String]                   
+// Opcional: un log para confirmar conexión
+mongoose.connection.once('open', () => {
+  console.log('Conectado a MongoDB Atlas');
 });
 
+// Definición esquema y modelo Person
+const personSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  age: Number,
+  favoriteFoods: [String]
+});
 
+const Person = mongoose.model('Person', personSchema);
 
+// Exporta modelo si lo necesitas en tests
+// module.exports = Person;  → depende de los tests
+
+// Rutas ejemplo:
+app.post('/person', (req, res) => {
+  const { name, age, favoriteFoods } = req.body;
+  const person = new Person({ name, age, favoriteFoods });
+  person.save((err, data) => {
+    if (err) return res.status(500).json({ error: 'Error guardando persona' });
+    res.json(data);
+  });
+});
+
+module.exports = app;
 
 
 
@@ -69,7 +96,7 @@ const queryChain = (done) => {
   done(null /*, data*/);
 };
 
-module.exports = Person;
+
 /** **Well Done !!**
 /* You completed these challenges, let's go celebrate !
  */
