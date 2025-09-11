@@ -32,12 +32,22 @@ const Person = mongoose.model('Person', personSchema);
 // 👇 Aquí viene lo que freeCodeCamp espera:
 exports.PersonModel = Person;
 
+
+
 // (el resto de las funciones de CRUD las vas a completar en pasos posteriores)
 
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
-};
+  const person = new Person({
+    name: "John Doe",
+    age: 25,
+    favoriteFoods: ["pizza", "pasta"]
+  });
 
+  person.save((err, data) => {
+    if (err) return done(err);
+    return done(null, data);
+  });
+};
 const createManyPeople = (arrayOfPeople, done) => {
   done(null /*, data*/);
 };
