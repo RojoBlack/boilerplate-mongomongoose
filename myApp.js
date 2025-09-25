@@ -1,39 +1,41 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-// Conexión a MongoDB Atlas
+// Conexión a MongoDB Atlas usando variable de entorno
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// ---- Definición esquema y modelo Person ----
+// ---- Definición del esquema y modelo Person ----
 const personSchema = new mongoose.Schema({
   name: { type: String, required: true },
   age: Number,
-  favoriteFoods: [String]
+  favoriteFoods: [String],
 });
 
 const Person = mongoose.model('Person', personSchema);
 
-// Exporta el modelo para tests
+// 👇 Exportar el modelo para los tests de FCC
 exports.PersonModel = Person;
 
-// --- CRUD Functions ---
+// ---- Funciones que FCC va probando ----
 
+// Reto actual: crear y guardar un registro de un modelo
 const createAndSavePerson = (done) => {
   const person = new Person({
-    name: "John Doe",
+    name: 'John Doe',
     age: 25,
-    favoriteFoods: ["pizza", "pasta"]
+    favoriteFoods: ['pizza', 'pasta'],
   });
 
-  person.save((err, data) => {
+  person.save(function (err, data) {
     if (err) return done(err);
     return done(null, data);
   });
 };
 
+// (el resto de las funciones se completan en los siguientes retos)
 const createManyPeople = (arrayOfPeople, done) => {
   done(null /*, data*/);
 };
@@ -51,7 +53,7 @@ const findPersonById = (personId, done) => {
 };
 
 const findEditThenSave = (personId, done) => {
-  const foodToAdd = "hamburger";
+  const foodToAdd = 'hamburger';
   done(null /*, data*/);
 };
 
@@ -65,12 +67,12 @@ const removeById = (personId, done) => {
 };
 
 const removeManyPeople = (done) => {
-  const nameToRemove = "Mary";
+  const nameToRemove = 'Mary';
   done(null /*, data*/);
 };
 
 const queryChain = (done) => {
-  const foodToSearch = "burrito";
+  const foodToSearch = 'burrito';
   done(null /*, data*/);
 };
 
