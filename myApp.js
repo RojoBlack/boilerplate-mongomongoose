@@ -111,11 +111,19 @@ const removeManyPeople = (done) => {
   });
 };
 
-
 const queryChain = (done) => {
-  const foodToSearch = 'burrito';
-  done(null /*, data*/);
+  const foodToSearch = "burrito";
+
+  Person.find({ favoriteFoods: foodToSearch })
+    .sort('name')           // orden por nombre ascendente
+    .limit(2)               // limita a 2 resultados
+    .select('-age')         // excluye la edad
+    .exec((err, data) => {
+      if (err) return done(err);
+      return done(null, data);
+    });
 };
+
 
 //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 exports.createAndSavePerson = createAndSavePerson;
